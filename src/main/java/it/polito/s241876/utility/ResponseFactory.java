@@ -16,17 +16,23 @@ public class ResponseFactory {
         return response;
     }
 
-    public static String getIstruzioniUsoOggettoResponse(String oggetto, String istr){
-        String response = "Le istruzioni d'uso per l'accessorio " + oggetto + " sono: " + istr;
+    public static String getIstruzioniUsoOggettoResponse(String oggetto, String istr, boolean exists){
+        String response = "";
+        if(exists)
+            response = "Le istruzioni d'uso per l'accessorio \"" + oggetto + "\" sono: " + istr;
+        else
+            response += "Non conosco il funzionamento dell'oggetto \""
+                        + oggetto + "\"";
+
         return response;
     }
 
     public static String getPresenzaOggettoResponse(String oggetto, boolean exists){
         String response = "";
         if(exists)
-            response += "L'oggetto " + oggetto + " è presente su questo veicolo.";
+            response += "L'oggetto \"" + oggetto + "\" è presente su questo veicolo.";
         else
-            response += "L'oggetto " + oggetto + " non è presente su questo veicolo.";
+            response += "L'oggetto \"" + oggetto + "\" non è presente su questo veicolo.";
 
         return response;
     }

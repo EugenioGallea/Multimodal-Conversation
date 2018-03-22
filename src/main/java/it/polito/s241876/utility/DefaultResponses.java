@@ -17,6 +17,12 @@ public class DefaultResponses {
             "Credo di non essere in grado di capire questa cosa...",
     };
 
+    final static String[] rispWelcome = {
+            "Ehi, posso fare qualcosa per te?",
+            "Buongiorno, posso esserti utile?",
+            "Ciao, come posso aiutarti?",
+    };
+
     public static String getOneRandomResponse(){
         int randomNum = ThreadLocalRandom.current().nextInt(0, 2 + 1);
         return rispDefault[randomNum];
@@ -24,5 +30,10 @@ public class DefaultResponses {
 
     public static String getOneSpecificResponse(int index){
         return rispDefault[index];
+    }
+
+    public static String getWelcomeResponse(){
+        int randomNum = ThreadLocalRandom.current().nextInt(0, 2 + 1);
+        return rispWelcome[randomNum];
     }
 }

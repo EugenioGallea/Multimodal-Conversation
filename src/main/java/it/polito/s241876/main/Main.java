@@ -39,7 +39,7 @@ public class Main {
             doWebhook(gson.fromJson(request.body(), AIResponse.class), output);
 
             response.type(CONTENT_TYPE);
-            response.status(201);
+            response.status(200);
 
             // L'output è automaticamente trasformato in json
             return output;
@@ -76,22 +76,31 @@ public class Main {
 
             case 2: // L'utente ha chiesto come si utilizza un particolare accessorio
                 String oggetto2 = input.getResult().getParameters().get("oggetto").getAsString();
+
+                // Pulizia dell'input
                 oggetto2.replaceAll("[-+.^:,]","");
                 oggetto2.replace("?", "");
-                System.out.println("Oggetto: " + oggetto2);
+                //System.out.println("Oggetto: " + oggetto2);
+                boolean exists_2 = adb.doesExist(input.getResult().getParameters().get("oggetto").getAsString());
                 String istr = adb.getIstruzioniUso(oggetto2);
                 response = ResponseFactory
-                            .getIstruzioniUsoOggettoResponse(oggetto2, istr);
+                            .getIstruzioniUsoOggettoResponse(oggetto2, istr, exists_2);
                 break;
 
             case 3: // L'utente ha richiesto se è presente un certo oggetto (accessorio)
-                boolean exists = adb.doesExist(input.getResult().getParameters().get("oggetto").getAsString());
+                boolean exists_3 = adb.doesExist(input.getResult().getParameters().get("oggetto").getAsString());
                 String oggetto3 = input.getResult().getParameters().get("oggetto").getAsString();
+
+                // Pulizia dell'input
                 oggetto3.replaceAll("[-+.^:,]","");
                 oggetto3.replace("?", "");
-                System.out.println("Oggetto: " + oggetto3);
-                response = ResponseFactory.getPresenzaOggettoResponse(oggetto3, exists);
+                //System.out.println("Oggetto: " + oggetto3);
+                response = ResponseFactory.getPresenzaOggettoResponse(oggetto3, exists_3);
 
+                break;
+
+            case 4: // Welcome user
+                response = DefaultResponses.getWelcomeResponse();
                 break;
 
             default: // L'utente ha inserito qualcosa alla quale io non so rispondere
