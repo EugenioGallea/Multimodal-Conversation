@@ -5,10 +5,9 @@ import com.google.gson.Gson;
 import ai.api.GsonFactory;
 import ai.api.model.Fulfillment;
 import it.polito.s241876.database.AccessoriDB;
-import it.polito.s241876.utility.*;
+import it.polito.s241876.utils.*;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static spark.Spark.*;
 
@@ -66,15 +65,13 @@ public class Main {
         AccessoriDB adb = new AccessoriDB(); // Classe per le interazioni con il DB
 
         // Questo è lo switch per discriminare l'intendo dell'utente e agire di conseguenza
-        switch (intent){
-            case 1: // L'utente ha richiesto la lista degli accessori
-                List<Accessorio> a_list = adb.getAllAccessori(); // Lista degli accessori salvati nel db
 
-                // Setto il response nel Json output finale
-                response = ResponseFactory.getListaAccessoriResponse(a_list);
+        switch (intent){
+            case Intent.WELCOME: // Welcome user
+                response = DefaultResponses.getWelcomeResponse();
                 break;
 
-            case 2: // L'utente ha chiesto come si utilizza un particolare accessorio
+            case Intent.FUNCTIONING: // L'utente ha chiesto come si utilizza un particolare accessorio
                 String oggetto2 = input.getResult().getParameters().get("oggetto").getAsString();
 
                 // Pulizia dell'input
@@ -87,7 +84,7 @@ public class Main {
                             .getIstruzioniUsoOggettoResponse(oggetto2, istr, exists_2);
                 break;
 
-            case 3: // L'utente ha richiesto se è presente un certo oggetto (accessorio)
+            case Intent.PRESENCE: // L'utente ha richiesto se è presente un certo oggetto (accessorio)
                 boolean exists_3 = adb.doesExist(input.getResult().getParameters().get("oggetto").getAsString());
                 String oggetto3 = input.getResult().getParameters().get("oggetto").getAsString();
 
@@ -99,8 +96,11 @@ public class Main {
 
                 break;
 
-            case 4: // Welcome user
-                response = DefaultResponses.getWelcomeResponse();
+            case Intent.ALL_ACESSORIES: // L'utente ha richiesto la lista degli accessori
+                List<Accessorio> a_list = adb.getAllAccessori(); // Lista degli accessori salvati nel db
+
+                // Setto il response nel Json output finale
+                response = ResponseFactory.getListaAccessoriResponse(a_list);
                 break;
 
             default: // L'utente ha inserito qualcosa alla quale io non so rispondere

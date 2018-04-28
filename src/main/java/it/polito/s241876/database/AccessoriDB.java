@@ -1,6 +1,6 @@
 package it.polito.s241876.database;
 
-import it.polito.s241876.utility.*;
+import it.polito.s241876.utils.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

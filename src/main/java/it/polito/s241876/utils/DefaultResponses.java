@@ -1,4 +1,4 @@
-package it.polito.s241876.utility;
+package it.polito.s241876.utils;
 
 import java.util.concurrent.ThreadLocalRandom;
 
