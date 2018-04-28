@@ -6,6 +6,8 @@ package it.polito.s241876.utils;
  * @author <a href="mailto:s241876@studenti.polito.it">Eugenio Gallea</a>
  */
 public class Constants {
+    public static boolean RUNNING = true;
+
     public static final String API_KEY = "b440b5389a3449bc8a89f8f5c78296a8";
 
     public static final String CONTENT_TYPE = "application/json";

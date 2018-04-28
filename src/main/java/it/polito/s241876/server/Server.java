@@ -108,6 +108,12 @@ public class Server {
             case Intent.POSITION_ANSWER: // L'utente ha risposto riferendosi a una specifica parte dell'auto
                 break;
 
+            case Intent.AFFERMATIVE_ANSWER:
+                break;
+
+            case Intent.NEGATIVE_ANSWER:
+                break;
+
             default: // L'utente ha inserito qualcosa alla quale io non so rispondere
                 response = DefaultResponses.getOneRandomResponse(); // Prendo un response di default a caso
 
