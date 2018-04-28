@@ -15,4 +15,9 @@ public class Constants {
 
     public static final String OBJECT = "oggetto";
     public static final String ACTION = "azione";
+    public static final String POSITION = "posizione";
+    public static final String QUANTITY = "numero";
+
+    public static final String INSTRUCTIONS = "istruzioni_uso";
+    public static final String ID = "id";
 }

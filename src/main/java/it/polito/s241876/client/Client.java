@@ -26,9 +26,9 @@ public class Client extends Thread {
         AIResponse response = null;
         String input = "";
         Scanner reader = new Scanner(System.in);
-
+        System.out.println(INPUT_PROMPT + TAG + "Scrivi qualcosa: ");
         while (!input.equals("esci")) {
-            System.out.println(INPUT_PROMPT + TAG + "Scrivi qualcosa: ");
+            System.out.print(INPUT_PROMPT);
             input = reader.nextLine();
             request = new AIRequest(input);
             try {

@@ -17,7 +17,7 @@ import static spark.Spark.post;
  */
 
 public class Server {
-    private static final String TAG = "[Server] ";
+    public static final String TAG = "[Server] ";
 
     public static void entryPoint() {
         // Inizializzo l'oggetto gson che mi permette di parsare correttamente la richiesta
@@ -112,6 +112,9 @@ public class Server {
                 break;
 
             case Intent.NEGATIVE_ANSWER:
+                break;
+
+            case Intent.SIMPLE_OBJECT:
                 break;
 
             default: // L'utente ha inserito qualcosa alla quale io non so rispondere

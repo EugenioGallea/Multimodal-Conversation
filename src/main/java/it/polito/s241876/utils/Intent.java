@@ -17,6 +17,7 @@ public class Intent {
     public static final int POSITION_ANSWER = 5;
     public static final int AFFERMATIVE_ANSWER = 6;
     public static final int NEGATIVE_ANSWER = 7;
+    public static final int SIMPLE_OBJECT = 8;
 
     private static int value;
 

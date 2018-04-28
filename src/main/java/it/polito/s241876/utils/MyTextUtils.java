@@ -8,14 +8,17 @@ package it.polito.s241876.utils;
  */
 
 public class MyTextUtils {
-    private static final String defaultRegex = "[-+.^:,?]";
+    private static final String defaultRegex = "[-+.^:,]";
 
     public static String cleanInput(String input) {
         return cleanInput(input, defaultRegex);
     }
 
     private static String cleanInput(String input, String regex) {
-        return input.replaceAll(regex, "");
+        int index = input.indexOf('?');
+        input.replaceAll(regex, "");
+
+        return index == -1 ? input : input.substring(0, index);
     }
 
 }

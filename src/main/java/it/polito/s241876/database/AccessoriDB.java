@@ -1,12 +1,16 @@
 package it.polito.s241876.database;
 
-import it.polito.s241876.utils.*;
+import it.polito.s241876.utils.Accessorio;
+import it.polito.s241876.utils.Constants;
+import it.polito.s241876.utils.MyTextUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Questa classe è responsabile di gestire le query al database, ha diverse funzioni a seconda
@@ -30,7 +34,6 @@ public class AccessoriDB {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-
                 Accessorio a = new Accessorio(rs.getString("id"), rs.getString("name"), rs.getString("categoria"), rs.getString("istruzioni_uso"));
                 accessori.add(a);
             }
@@ -48,22 +51,28 @@ public class AccessoriDB {
             Funzione che mi permette di ottenere le specifiche istruzioni d'uso per uno
             oggetto inserito dall'utente.
          */
-        final String sql = "SELECT istruzioni_uso FROM accessori WHERE name=?";
+        final String description = "istruzioni per utilizzo dell'oggetto " + oggetto;
+        final String sql = "SELECT id, istruzioni_uso FROM accessori WHERE name=?";
         String result = "";
+        int id = 0;
         try {
             Connection conn = DBConnect.getInstance().getConnection();
             PreparedStatement st = conn.prepareStatement(sql);
-            st.setString(1, oggetto);
+            st.setString(1, MyTextUtils.cleanInput(oggetto));
             ResultSet rs = st.executeQuery();
 
-            while (rs.next())
-                result += rs.getString("istruzioni_uso");
+            while (rs.next()) {
+                result += rs.getString(Constants.INSTRUCTIONS);
+                id = rs.getInt(Constants.ID);
+            }
 
             conn.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        insertUserRequest(Optional.of(id), description);
 
         return result;
     }
@@ -78,7 +87,7 @@ public class AccessoriDB {
         try {
             Connection conn = DBConnect.getInstance().getConnection();
             PreparedStatement st = conn.prepareStatement(sql);
-            st.setString(1, oggetto);
+            st.setString(1, MyTextUtils.cleanInput(oggetto));
             ResultSet rs = st.executeQuery();
 
             while (rs.next())
@@ -94,6 +103,19 @@ public class AccessoriDB {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public void insertUserRequest(Optional<Integer> accessorio, String description) {
+        final String sql = "INSERT INTO user_requests (id_accessorio, description) VALUES (?, ?)";
+        try {
+            Connection conn = DBConnect.getInstance().getConnection();
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setInt(1, accessorio.get().intValue());
+            st.setString(2, description);
+            st.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
