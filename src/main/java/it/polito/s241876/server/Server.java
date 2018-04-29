@@ -6,6 +6,7 @@ import ai.api.model.Fulfillment;
 import com.google.gson.Gson;
 import it.polito.s241876.database.AccessoriDB;
 import it.polito.s241876.utils.*;
+import javafx.util.Pair;
 
 import static spark.Spark.post;
 
@@ -17,7 +18,8 @@ import static spark.Spark.post;
  */
 
 public class Server {
-    public static final String TAG = "[Server] ";
+    private static final String TAG = "[Server] ";
+    private static final AccessoriDB adb = AccessoriDB.getInstance(); // Classe per interazione con il database
 
     public static void entryPoint() {
         // Inizializzo l'oggetto gson che mi permette di parsare correttamente la richiesta
@@ -55,27 +57,33 @@ public class Server {
             fare e qual è la funzione adatta per la query al database.
          */
 
-        String response = ""; // Stringa per il response, verrà poi modificata col risultato della query specifica
-        AccessoriDB adb = new AccessoriDB(); // Classe per le interazioni con il DB
+        String response = DefaultResponses.getOneRandomResponse();
+        // Stringa per il response, verrà poi modificata col risultato della query specifica
+        String oggetto; // Stringa col nome dell'oggetto
+
+        System.out.println(TAG + intent);
 
         // Questo è lo switch per discriminare l'intendo dell'utente e agire di conseguenza
-
         switch (intent) {
             case Intent.WELCOME: // Welcome user
+                adb.addUserIntent(Intent.WELCOME, null); // Per storico degli intenti ricevuti dall'utente
+
                 response = DefaultResponses.getWelcomeResponse();
                 break;
 
             case Intent.FUNCTIONING: // L'utente ha chiesto come si utilizza un particolare accessorio
-                String oggetto2 = MyTextUtils.cleanInput(input.getResult()
+                oggetto = MyTextUtils.cleanInput(input.getResult()
                         .getParameters()
                         .get(Constants.OBJECT)
                         .getAsString()
                 );
 
+                adb.addUserIntent(Intent.FUNCTIONING, oggetto); // Per storico degli intenti ricevuti dall'utente
+
                 response = ResponseFactory
                         .getIstruzioniUsoOggettoResponse(
-                                oggetto2, // Oggetto
-                                adb.getIstruzioniUso(oggetto2), // Istruzioni d'uso
+                                oggetto, // Oggetto
+                                adb.getIstruzioniUsoAccessorio(oggetto), // Istruzioni d'uso
                                 adb.doesExist(input.getResult()
                                         .getParameters()
                                         .get(Constants.OBJECT)
@@ -85,12 +93,15 @@ public class Server {
                 break;
 
             case Intent.PRESENCE: // L'utente ha richiesto se è presente un certo oggetto (accessorio)
+                oggetto = MyTextUtils.cleanInput(input.getResult()
+                        .getParameters()
+                        .get(Constants.OBJECT)
+                        .getAsString());
+
+                adb.addUserIntent(Intent.PRESENCE, oggetto); // Per storico degli intenti ricevuti dall'utente
+
                 response = ResponseFactory.getPresenzaOggettoResponse(
-                        MyTextUtils.cleanInput(input.getResult()
-                                .getParameters()
-                                .get(Constants.OBJECT)
-                                .getAsString()
-                        ), // Oggetto
+                        oggetto, // Oggetto
                         adb.doesExist(input.getResult()
                                 .getParameters()
                                 .get(Constants.OBJECT)
@@ -100,15 +111,23 @@ public class Server {
                 break;
 
             case Intent.ALL_ACESSORIES: // L'utente ha richiesto la lista degli accessori
+                adb.addUserIntent(Intent.ALL_ACESSORIES, null); // Per storico degli intenti ricevuti dall'utente
+
                 // Setto il response con la lista degli accessori nel Json output finale
                 response = ResponseFactory.getListaAccessoriResponse(adb.getAllAccessori());
-
                 break;
 
             case Intent.POSITION_ANSWER: // L'utente ha risposto riferendosi a una specifica parte dell'auto
+                response = DefaultResponses.getOneRandomResponse();
                 break;
 
             case Intent.AFFERMATIVE_ANSWER:
+                Pair<Integer, String> entry = adb.getLastIntentInfo();
+                if (entry.getKey() != 0) {
+                    adb.addUserRequest(entry.getKey(), entry.getValue(), false);
+                    response = "La tua richiesta è stata presa in considerazione...";
+                } else
+                    response = DefaultResponses.getOneRandomResponse();
                 break;
 
             case Intent.NEGATIVE_ANSWER:
@@ -118,8 +137,6 @@ public class Server {
                 break;
 
             default: // L'utente ha inserito qualcosa alla quale io non so rispondere
-                response = DefaultResponses.getOneRandomResponse(); // Prendo un response di default a caso
-
                 break;
         }
 
