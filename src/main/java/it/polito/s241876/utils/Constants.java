@@ -23,6 +23,8 @@ public class Constants {
 
     public static final String INSTRUCTIONS = "istruzioni_uso";
     public static final String ID = "id";
+    public static final String ACCENSIONE = "accensione";
+    public static final String IDACCESSORIO = "id_accessorio";
 
     public enum IntentType {
         WELCOME(1, "welcome"), FUNCTIONING(2, "functioning"), PRESENCE(3, "presence"),

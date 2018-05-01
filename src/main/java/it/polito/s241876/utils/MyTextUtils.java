@@ -8,17 +8,31 @@ package it.polito.s241876.utils;
  */
 
 public class MyTextUtils {
-    private static final String defaultRegex = "[-+.^:,]";
+    private static final String defaultRegex = "[-+.^:,]\"\'";
 
     public static String cleanInput(String input) {
         return cleanInput(input, defaultRegex);
     }
 
     private static String cleanInput(String input, String regex) {
-        int index = input.indexOf('?');
-        input.replaceAll(regex, "");
-
-        return index == -1 ? input : input.substring(0, index);
+        String in = input.replaceAll(regex, "");
+        int index = in.indexOf('?');
+        String result = index == -1 ? in : in.substring(0, index);
+        return convertToLowerCase(result, 0, result.length());
     }
 
+    private static String convertToLowerCase(String s, int begin, int end) {
+        if (s.length() == 0) return "";
+
+        return s.substring(begin, end).toLowerCase();
+    }
+
+    public static boolean isNumeric(String azione) {
+        try {
+            int i = Integer.parseInt(azione);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
 }

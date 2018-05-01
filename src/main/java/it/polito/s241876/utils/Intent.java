@@ -10,14 +10,15 @@ import java.util.List;
  * @author <a href="mailto:s241876@studenti.polito.it">Eugenio Gallea</a>
  */
 public class Intent {
-    public static final int WELCOME = 1;
-    public static final int FUNCTIONING = 2;
-    public static final int PRESENCE = 3;
-    public static final int ALL_ACESSORIES = 4;
-    public static final int POSITION_ANSWER = 5;
-    public static final int AFFERMATIVE_ANSWER = 6;
-    public static final int NEGATIVE_ANSWER = 7;
-    public static final int SIMPLE_OBJECT = 8;
+    public static final int BENVENUTO = 1;
+    public static final int UTILIZZO = 2;
+    public static final int PRESENZA = 3;
+    public static final int ACCESSORI = 4;
+    public static final int POSIZIONE = 5;
+    public static final int RISPOSTA_POSITIVA = 6;
+    public static final int RISPOSTA_NEGATIVA = 7;
+    public static final int OGGETTO = 8;
+    public static final int ABBANDONA = 9;
 
     private static int value;
 
@@ -31,10 +32,10 @@ public class Intent {
 
     public static List<Intent> values() {
         return Arrays.asList(
-                new Intent(WELCOME),
-                new Intent(FUNCTIONING),
-                new Intent(PRESENCE),
-                new Intent(ALL_ACESSORIES)
+                new Intent(BENVENUTO),
+                new Intent(UTILIZZO),
+                new Intent(PRESENZA),
+                new Intent(ACCESSORI)
         );
     }
 }
