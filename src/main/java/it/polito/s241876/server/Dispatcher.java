@@ -23,7 +23,7 @@ public class Dispatcher {
         String response = Response.getOneRandomResponse(); // Stringa per il response, verrà poi modificata col risultato della query specifica
         String oggetto; // Stringa col nome dell'oggetto
 
-        // Questo è lo switch per discriminare l'intendo dell'utente e agire di conseguenza
+        // Questo è lo switch per discriminare l'intento dell'utente e agire di conseguenza
         switch (intent) {
             case Intent.BENVENUTO: // Welcome user
                 response = Response.getWelcomeResponse();
@@ -159,7 +159,7 @@ public class Dispatcher {
             case Action.ACCENSIONE: // Accensione
                 int posizione = adb.getLastObjectPosition();
 
-                System.out.println(TAG + posizione + " " + lastOggetto);
+                //System.out.println(TAG + posizione + " " + lastOggetto);
 
                 if (posizione == -1 && lastOggetto == null) {
                     return "Non so a che oggetto tu ti stia riferendo...";
@@ -182,7 +182,7 @@ public class Dispatcher {
                                 lastOggetto, // Oggetto
                                 adb.getIstruzioniUsoAccessorio(lastOggetto), // Istruzioni d'uso
                                 adb.doesExist(lastOggetto)); // Esistenza o no nel db
-                adb.insertUserIntent(Intent.UTILIZZO, lastOggetto, Action.FUNZIONAMENTO_GENERALE); // Per storico degli intenti ricevuti dall'utente
+                //adb.insertUserIntent(Intent.UTILIZZO, lastOggetto, Action.FUNZIONAMENTO_GENERALE); // Per storico degli intenti ricevuti dall'utente
                 break;
         }
 
