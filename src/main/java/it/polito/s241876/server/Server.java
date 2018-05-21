@@ -39,10 +39,6 @@ public class Server {
 
     private static void doWebhook(AIResponse input, Fulfillment output) {
         // Nel caso si voglia fare della pre-elaborazione, farla qua.
-        String response = Dispatcher.dispatcherFunction(Integer.parseInt(input.getResult().getMetadata().getIntentName()), input);
-
-        // Setto il response nel Json output finale
-        output.setSpeech(response);
-        output.setDisplayText(response);
+        Dispatcher.dispatcherFunction(input, output);
     }
 }

@@ -1,10 +1,9 @@
 package it.polito.s241876.database;
 
+import com.google.gson.JsonElement;
 import it.polito.s241876.utils.Accessorio;
-import it.polito.s241876.utils.Action;
 import it.polito.s241876.utils.Constants;
 import it.polito.s241876.utils.MyTextUtils;
-import javafx.util.Pair;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,8 +30,6 @@ public class AccessoriDB {
     private static HashMap<String, Integer> objectIdResolver = new HashMap<>();
     ; // Per fare prima a prendere gli id degli oggetti
     private static int lastUserRequestId = 0;
-    private static int lastIntentRowId = 0;
-    private static int lastIntentId = -1;
     private static int currentExecutingTask = 0; // Indice che corrisponde alla richiesta dell'utente che è presa in carico
 
     private AccessoriDB() {
@@ -45,10 +42,6 @@ public class AccessoriDB {
 
     public static AccessoriDB getInstance() {
         return (instance == null) ? new AccessoriDB() : instance;
-    }
-
-    public int getLastIntentId() {
-        return lastIntentId;
     }
 
     public List<Accessorio> getAllAccessori() {
@@ -162,42 +155,6 @@ public class AccessoriDB {
         return -1;
     }
 
-    public void insertUserRequest(int oggetto, String description, int completed, int number) {
-    }
-
-    public void insertUserIntent(int id_intent, String oggetto) {
-        insertUserIntent(id_intent, oggetto, -1);
-    }
-
-    public void insertUserIntent(int id_intent, String oggetto, int action) {
-        final String sql = "INSERT INTO user_intents (id_intent, id_accessorio, description, id_action) VALUES (?, ?, ?, ?)";
-        int id_accessorio = -1;
-
-        if (objectIdResolver.containsKey(oggetto))
-            id_accessorio = objectIdResolver.get(oggetto).intValue();
-
-        try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
-            st.setInt(1, id_intent);
-            st.setInt(2, id_accessorio);
-            st.setString(3, Constants.IntentType.valueOf(id_intent).getDescription());
-            st.setInt(4, action);
-            st.execute();
-            ResultSet rs = st.getGeneratedKeys();
-
-            while (rs.next()) {
-                lastIntentRowId = rs.getInt(1);
-                lastIntentId = id_intent;
-            }
-
-            conn.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void completeUserRequest(int id_request) {
         final String sql = "UPDATE user_requests SET completed = 1 WHERE id = ?";
 
@@ -217,27 +174,6 @@ public class AccessoriDB {
         currentExecutingTask = 0;
     }
 
-    public Pair<Integer, String> getLastIntentInfo() {
-        final String sql = "SELECT id_accessorio, description FROM user_intents WHERE id = ?";
-        Pair<Integer, String> result = new Pair<>(0, null);
-
-        try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
-            st.setInt(1, lastIntentRowId);
-            ResultSet rs = st.executeQuery();
-
-            while (rs.next())
-                result = new Pair<>(rs.getInt("id_accessorio"), rs.getString("description"));
-
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
     public void deleteLastUserRequest() {
         final String sql = "DELETE FROM user_requests WHERE id = ?";
 
@@ -254,10 +190,6 @@ public class AccessoriDB {
             e.printStackTrace();
         }
 
-    }
-
-    public boolean isTaskExecuting() {
-        return (currentExecutingTask == 0) ? false : true;
     }
 
     public String getIstruzioniAccensioneAccessorio(String oggetto) {
@@ -291,12 +223,6 @@ public class AccessoriDB {
         }
 
         return result;
-    }
-
-    public boolean isObjectInMultiplePosition() {
-        int id_accessorio = getAccessiorioOfRequest(lastUserRequestId);
-
-        return isObjectInMultiplePosition(id_accessorio);
     }
 
     public boolean isObjectInMultiplePosition(int id_accessorio) {
@@ -345,104 +271,69 @@ public class AccessoriDB {
         return id;
     }
 
-    public String getLastAskedObject() {
-        final String sql = "SELECT name FROM accessori WHERE id = ?";
-        final Pair<Integer, String> info = getLastIntentInfo();
-        String result = "";
+    public int getObjectId(String oggetto, int position) {
+        final String sql = "SELECT id FROM accessori WHERE name = ? AND posizione = ?";
+        int id = 1;
 
         try {
             Connection conn = DBConnect.getInstance().getConnection();
             PreparedStatement st = conn.prepareStatement(sql);
-            st.setInt(1, info.getKey().intValue());
+            st.setString(1, oggetto);
+            st.setInt(2, position);
             ResultSet rs = st.executeQuery();
 
             while (rs.next())
-                result = rs.getString("name");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
-    public int getLastObjectPosition() {
-        Pair<Integer, String> info = getLastIntentInfo();
-        int position = -1;
-
-        final String sql = "SELECT posizione FROM accessori WHERE id = ?";
-
-        try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
-            st.setInt(1, info.getKey().intValue());
-            ResultSet rs = st.executeQuery();
-
-            while (rs.next())
-                position = rs.getInt("posizione");
+                id = rs.getInt("id");
 
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return position;
+        return id;
     }
 
-    public int getLastIntentAction() {
-        final String sql = "SELECT id_action FROM user_intents WHERE id = ?";
-        int action = -1;
+    public boolean isPositionNeeded(String oggetto) {
+        final String sql = "SELECT COUNT(*) as tot FROM accessori WHERE name = ?";
+        int count = 1;
 
         try {
             Connection conn = DBConnect.getInstance().getConnection();
             PreparedStatement st = conn.prepareStatement(sql);
-            st.setInt(1, lastIntentRowId);
+            st.setString(1, oggetto);
             ResultSet rs = st.executeQuery();
 
             while (rs.next())
-                action = rs.getInt("id_action");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return action;
-    }
-
-    public String getIstruzioni(String oggetto, int action, String position) {
-        int azione;
-        String result = "";
-
-        switch (action) {
-            case Action.ACCENSIONE:
-                azione = Action.ACCENSIONE;
-                result = getIstruzioniAccensioneAccessorio(oggetto, Integer.parseInt(position));
-                break;
-
-            case Action.FUNZIONAMENTO_GENERALE:
-                azione = Action.FUNZIONAMENTO_GENERALE;
-                getIstruzioniUsoAccessorio(oggetto);
-                break;
-
-            default:
-                break;
-        }
-
-        return result;
-    }
-
-    public int getObjectId(String oggetto) {
-        return objectIdResolver.get(oggetto);
-    }
-
-    public void cleanUserIntentsTable() {
-        final String sql = "DELETE FROM user_intents";
-
-        try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
-            st.execute();
+                count = rs.getInt("tot");
 
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return count != 1;
+    }
+
+    public List<String> getListObjectPosition(JsonElement oggetto) {
+        final String sql = "SELECT posizione FROM accessori WHERE name = ?";
+        List<String> positions = new LinkedList<>();
+        if (oggetto == null)
+            return null;
+
+        try {
+            Connection conn = DBConnect.getInstance().getConnection();
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setString(1, oggetto.getAsString());
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next())
+                positions.add(rs.getString("posizione"));
+
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return positions;
     }
 }

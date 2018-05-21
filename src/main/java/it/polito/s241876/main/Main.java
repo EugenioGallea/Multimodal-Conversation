@@ -14,8 +14,8 @@ import it.polito.s241876.server.Server;
  * @author <a href="mailto:s241876@studenti.polito.it">Eugenio Gallea</a>
  */
 public class Main {
-    public static final Thread serverThread = new Thread(() -> Server.entryPoint()); // Thread per elaborare le informazioni interagendo con il DB
-    public static final Thread clientThread = new Thread(() -> Client.entryPoint()); // Thread per interagire con l'utente
+    private static final Thread serverThread = new Thread(() -> Server.entryPoint()); // Thread per elaborare le informazioni interagendo con il DB
+    private static final Thread clientThread = new Thread(() -> Client.entryPoint()); // Thread per interagire con l'utente
 
     public static void main(String[] args) {
         serverThread.start();

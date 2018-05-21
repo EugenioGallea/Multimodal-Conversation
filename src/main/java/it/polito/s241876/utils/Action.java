@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Action {
-    public static final int ACCENSIONE = 1;
-    public static final int FUNZIONAMENTO_GENERALE = 2;
+    public static final String ACCENSIONE = "accensione";
+    public static final String FUNZIONAMENTO_GENERALE = "funzionamento";
 
-    private int value;
+    private String value;
 
-    public Action(final int value) {
+    public Action(final String value) {
         this.value = value;
     }
 

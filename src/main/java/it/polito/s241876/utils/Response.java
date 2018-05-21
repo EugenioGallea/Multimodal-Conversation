@@ -18,12 +18,6 @@ public class Response {
             "Credo di non essere in grado di capire questa cosa...",
     };
 
-    final static String[] rispWelcome = {
-            "Ehi, posso fare qualcosa per te?",
-            "Buongiorno, posso esserti utile?",
-            "Ciao, come posso aiutarti?",
-    };
-
     final static String[] rispOfferTask = {
             "Preferisci che faccia io?",
             "Se vuoi posso fare io, va bene?",
@@ -41,11 +35,6 @@ public class Response {
 
     public static String getOneSpecificResponse(int index){
         return rispDefault[index];
-    }
-
-    public static String getWelcomeResponse(){
-        int randomNum = ThreadLocalRandom.current().nextInt(0, 2 + 1);
-        return rispWelcome[randomNum];
     }
 
     public static String getOneRandomOfferResponse() {
@@ -113,5 +102,22 @@ public class Response {
             return istr + " \n" + getOneRandomOfferResponse();
         else
             return "Dovresti specificare la posizione dell'oggetto " + oggetto;
+    }
+
+    public static String getListObjectPositionsResponse(String oggetto, List<String> positions) {
+        if (positions.size() == 1) {
+            return "L'oggetto " + oggetto + " esiste solo nella posizione " + positions.get(0);
+        } else {
+            StringBuilder response = new StringBuilder("L'oggetto " + oggetto + " esiste nelle posizioni: ");
+            for (String position : positions) {
+                response.append(Position.getValueGivenInt(Integer.parseInt(position)));
+                if (!positions.get(positions.size() - 1).equals(position))
+                    response.append(", ");
+            }
+
+            response.append(".");
+
+            return response.toString();
+        }
     }
 }

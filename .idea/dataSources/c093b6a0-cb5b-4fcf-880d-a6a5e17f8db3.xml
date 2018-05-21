@@ -18,42 +18,45 @@
     <table id="8" parent="2" name="sqlite_sequence">
       <System>1</System>
     </table>
-    <table id="9" parent="2" name="user_intents"/>
-    <table id="10" parent="2" name="user_requests"/>
-    <column id="11" parent="6" name="id">
+    <table id="9" parent="2" name="user_requests"/>
+    <column id="10" parent="6" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
     </column>
-    <column id="12" parent="6" name="name">
+    <column id="11" parent="6" name="name">
       <Position>2</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="13" parent="6" name="categoria">
+    <column id="12" parent="6" name="categoria">
       <Position>3</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="14" parent="6" name="istruzioni_uso">
+    <column id="13" parent="6" name="istruzioni_uso">
       <Position>4</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="15" parent="6" name="accensione">
+    <column id="14" parent="6" name="accensione">
       <Position>5</Position>
       <DataType>TEXT|0s</DataType>
     </column>
-    <column id="16" parent="6" name="stato">
+    <column id="15" parent="6" name="stato">
       <Position>6</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>0</DefaultExpression>
     </column>
-    <column id="17" parent="6" name="posizione">
+    <column id="16" parent="6" name="posizione">
       <Position>7</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>1</DefaultExpression>
+    </column>
+    <column id="17" parent="6" name="nome_posizione">
+      <Position>8</Position>
+      <DataType>TEXT|0s</DataType>
     </column>
     <key id="18" parent="6">
       <ColNames>id</ColNames>
@@ -88,72 +91,32 @@
     <column id="26" parent="9" name="id">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
-      <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="27" parent="9" name="id_intent">
-      <Position>2</Position>
-      <DataType>INTEGER|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="28" parent="9" name="id_accessorio">
-      <Position>3</Position>
-      <DataType>INTEGER|0s</DataType>
-      <DefaultExpression>-1</DefaultExpression>
-    </column>
-    <column id="29" parent="9" name="timestamp">
-      <Position>4</Position>
-      <DataType>DATETIME|0s</DataType>
-      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
-    </column>
-    <column id="30" parent="9" name="description">
-      <Position>5</Position>
-      <DataType>TEXT|0s</DataType>
-    </column>
-    <column id="31" parent="9" name="id_action">
-      <Position>6</Position>
-      <DataType>INTEGER|0s</DataType>
-      <DefaultExpression>-1</DefaultExpression>
-    </column>
-    <index id="32" parent="9" name="table_name_id_uindex">
-      <ColNames>id</ColNames>
-      <ColumnCollations></ColumnCollations>
-      <Unique>1</Unique>
-    </index>
-    <key id="33" parent="9">
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>table_name_id_uindex</UnderlyingIndexName>
-    </key>
-    <column id="34" parent="10" name="id">
-      <Position>1</Position>
-      <DataType>INTEGER|0s</DataType>
-      <SequenceIdentity>1</SequenceIdentity>
-    </column>
-    <column id="35" parent="10" name="id_accessorio">
+    <column id="27" parent="9" name="id_accessorio">
       <Position>2</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="36" parent="10" name="timestamp">
+    <column id="28" parent="9" name="timestamp">
       <Position>3</Position>
       <DataType>DATETIME|0s</DataType>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
     </column>
-    <column id="37" parent="10" name="description">
+    <column id="29" parent="9" name="description">
       <Position>4</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="38" parent="10" name="completed">
+    <column id="30" parent="9" name="completed">
       <Position>5</Position>
       <DataType>INTEGER|0s</DataType>
     </column>
-    <column id="39" parent="10" name="numero">
+    <column id="31" parent="9" name="numero">
       <Position>6</Position>
       <DataType>INTEGER|0s</DataType>
       <DefaultExpression>1</DefaultExpression>
     </column>
-    <key id="40" parent="10">
+    <key id="32" parent="9">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
