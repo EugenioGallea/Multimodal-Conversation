@@ -1,7 +1,7 @@
-package it.polito.s241876.utility;
+package it.polito.s241876.utils;
 
 public class Accessorio {
-    private String id;
+    private Integer id;
     private String nome;
     private String categoria;
     private String istruzioni_uso;
@@ -9,17 +9,17 @@ public class Accessorio {
     public Accessorio(){}
 
     public Accessorio(String id, String nome, String categoria, String istruzioni_uso){
-        this.id = id;
+        this.id = Integer.parseInt(id);
         this.nome = nome;
         this.categoria = categoria;
         this.istruzioni_uso = istruzioni_uso;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
